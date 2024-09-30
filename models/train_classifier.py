@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine
 
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
@@ -20,6 +21,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
 from sklearn.metrics import classification_report
+
 
 
 def load_data(database_filepath):
@@ -65,9 +67,6 @@ def tokenize(text):
         
     return clean_tokens
 
-from sklearn.base import BaseEstimator, TransformerMixin
-import nltk
-import pandas as pd
 
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
     """
