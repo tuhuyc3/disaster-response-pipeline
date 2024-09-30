@@ -27,7 +27,7 @@ These datasets can be found in the data/ directory.
 ## Project Structure
 
 ```bash
-DISASTER-RESPONSE-PIPELINE/
+disaster-response-pipeline/
 ├── app/
 │   ├── templates/                    # HTML templates for the web app
 │   └── run.py                        # Main application file that starts the Flask server
