@@ -1,12 +1,60 @@
 import sys
+import pandas as pd 
+from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    """
+    INPUT:
+    messages_filepath - path to messages csv file
+    categories_filepath -  path to categories csv file
+
+    OUTPUT:
+    df - merged data
+    """
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = pd.merge(messages, categories, on = 'id')
+    return df
 
 
 def clean_data(df):
-    pass
+    """
+    INPUT:
+    df - merged data
+    
+    OUTPUT:
+    df - cleaned data
+    """
+    # create dataframe of the 36 individual category columns
+    categories = df['categories'].str.split(';', expand=True)
+    # select the first row of the categories dataframe
+    row = categories.iloc[0]
+    # get categories column names
+    category_colnames = [element.split('-')[0] for element in row]
+    # rename the columns of `categories`    
+    categories.columns = category_colnames
+
+
+    for column in categories.columns:
+        # set each value to be the last character of the string
+        categories[column] = categories[column].str[-1]
+        
+        # convert column from string to numeric
+        categories[column] = categories[column].astype(int)
+
+    # drop the original categories column from `df`
+    df.drop(columns = 'categories', inplace= True)
+
+    # concatenate the original dataframe with the new `categories` dataframe
+    df = pd.concat([df,categories], axis = 1)
+
+    # drop duplicates
+    df.drop_duplicates(inplace= True)
+
+    
+
+
 
 
 def save_data(df, database_filename):
