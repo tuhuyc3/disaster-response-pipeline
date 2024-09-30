@@ -4,11 +4,13 @@ import pandas as pd
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+from sklearn.base import BaseEstimator, TransformerMixin
 
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+import joblib
+import nltk
 from sqlalchemy import create_engine
 
 
@@ -25,12 +27,31 @@ def tokenize(text):
 
     return clean_tokens
 
+
+class StartingVerbExtractor(BaseEstimator, TransformerMixin):
+
+    def starting_verb(self, text):
+        sentence_list = nltk.sent_tokenize(text)
+        for sentence in sentence_list:
+            pos_tags = nltk.pos_tag(tokenize(sentence))
+            first_word, first_tag = pos_tags[0]
+            if first_tag in ['VB', 'VBP'] or first_word == 'RT':
+                return True
+        return False
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        X_tagged = pd.Series(X).apply(self.starting_verb)
+        return pd.DataFrame(X_tagged)
+
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/disaster_response.db')
+df = pd.read_sql_table('disaster_response', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -42,6 +63,10 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+
+
+    category_names = df.iloc[:, 4:].columns
+    category_counts = (df.iloc[:, 4:]!=0).sum()
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -61,6 +86,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=category_names,
+                    y=category_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
                 }
             }
         }
