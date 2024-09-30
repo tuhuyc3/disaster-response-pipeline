@@ -52,13 +52,33 @@ def clean_data(df):
     # drop duplicates
     df.drop_duplicates(inplace= True)
 
+    # drop 'child_alone' column as it has only 0 values - as per our analysis in ML Pipeline prep 
+    df = df.drop('child_alone', axis = 1)
     
+    # As per our Jupyter Notebook analysis, 'related' column has max value of 2, it could be error
+    # therefore, we will replace '2' with '1'
+    df['related'] = df['related'].map(lambda x: 1 if x==2 else x)
+
+    # Also, 'related' column has max value of 2, it should be an error
+    # therefore, we will replace '2' with '1'
+    df['related'] = df['related'].map(lambda x: 1 if x==2 else x)
+
+
 
 
 
 
 def save_data(df, database_filename):
-    pass  
+    """
+    INPUT:
+    df - cleaned data
+    database_filename - database filename for sqlite database with (.db) file type
+    
+    OUTPUT:
+    None - save cleaned data into sqlite database
+    """
+    engine = create_engine('sqlite:///'+ database_filename)
+    df.to_sql('disaster_response', engine, index = False, if_exists = 'replace')
 
 
 def main():
