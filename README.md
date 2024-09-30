@@ -26,6 +26,7 @@ These datasets can be found in the data/ directory.
 
 ## Project Structure
 
+```bash
 DISASTER-RESPONSE-PIPELINE/
 ├── app/
 │   ├── templates/                    # HTML templates for the web app
@@ -42,6 +43,7 @@ DISASTER-RESPONSE-PIPELINE/
 │   ├── ML Pipeline Preparation.ipynb   # Jupyter notebook for ML pipeline preparation
 │   └── train_classifier.py            # Python script for training the classifier
 └── README.md                         # Project documentation
+```
 
 ## Evaluation
 - The model's performance is evaluated using metrics including accuracy, precision, recall, and F1-score to ensure effective classification of disaster messages.
