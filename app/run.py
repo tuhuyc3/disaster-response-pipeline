@@ -27,13 +27,12 @@ def tokenize(text):
 
     return clean_tokens
 
-
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 
     def starting_verb(self, text):
         sentence_list = nltk.sent_tokenize(text)
         for sentence in sentence_list:
-            pos_tags = nltk.pos_tag(tokenize(sentence))
+            pos_tags = nltk.pos_tag(nltk.word_tokenize(sentence))
             first_word, first_tag = pos_tags[0]
             if first_tag in ['VB', 'VBP'] or first_word == 'RT':
                 return True
@@ -63,8 +62,7 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-
-
+    
     category_names = df.iloc[:, 4:].columns
     category_counts = (df.iloc[:, 4:]!=0).sum()
     
@@ -89,6 +87,7 @@ def index():
                 }
             }
         },
+
         {
             'data': [
                 Bar(
@@ -107,6 +106,7 @@ def index():
                 }
             }
         }
+        
     ]
     
     # encode plotly graphs in JSON

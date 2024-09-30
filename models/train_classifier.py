@@ -142,8 +142,8 @@ def build_model(clf = RandomForestClassifier()):
     ])
     
     param_grid = {
-        'clf__estimator__max_depth': [10, 50],
-        'clf__estimator__n_estimators': [10, 20]
+        'clf__estimator__max_depth': [50, 100],
+        'clf__estimator__n_estimators': [10, 20, 30]
         }
 
         
