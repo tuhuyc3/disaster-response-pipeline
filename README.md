@@ -1,5 +1,13 @@
 # Disaster Response Pipeline Project
 
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Data](#data)
+- [Instructions](#instructions)
+- [Project Structure](#project-structure)
+- [Evaluation](#evaluation)
+
 ## Project Overview
 The **Disaster Response Pipeline** project is designed to build a machine learning model that classifies messages related to disasters. This application aims to assist humanitarian organizations in responding to crises effectively by categorizing messages into relevant disaster response categories.
 
